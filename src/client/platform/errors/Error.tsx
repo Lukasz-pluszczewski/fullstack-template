@@ -10,8 +10,18 @@ const DEFAULT_MESSAGE = {
   '404': [
     'Page not found',
     <>
-      You've reached the end of the internet. There is nothing left.{' '}
-      <Link to="/" label="Go home" />
+      You've reached the end of the internet. There is nothing left.
+      <br />
+      <Group justify="center">
+        <Link
+          to="/"
+          label={
+            <Button variant="white" size="md">
+              Go home
+            </Button>
+          }
+        />
+      </Group>
     </>,
   ],
   '400': [
@@ -27,6 +37,16 @@ const DEFAULT_MESSAGE = {
     <>
       Damn! We've fucked something up. Sorry about that. You can try refreshing
       the page but it's probably not gonna work.
+      <br />
+      <Group justify="center">
+        <Button
+          variant="white"
+          size="md"
+          onClick={() => window.location.reload()}
+        >
+          Refresh the page
+        </Button>
+      </Group>
     </>,
   ],
   default: [
@@ -34,6 +54,16 @@ const DEFAULT_MESSAGE = {
     <>
       Something is definitely wrong. You can try refreshing but if that doesn't
       work, well, you're out of luck. Sorry.
+      <br />
+      <Group justify="center">
+        <Button
+          variant="white"
+          size="md"
+          onClick={() => window.location.reload()}
+        >
+          Refresh the page
+        </Button>
+      </Group>
     </>,
   ],
 };
@@ -51,7 +81,7 @@ const getDescription = (error?: BaseError) => {
     return error.devMessage;
   }
   return (
-    error?.message
+    error?.description
     || DEFAULT_MESSAGE[
       `${error?.httpStatus || 0}` as keyof typeof DEFAULT_MESSAGE
     ][1]
@@ -69,15 +99,6 @@ export function Error({ error }: { error: BaseError }) {
         <Text size="lg" ta="center" className={classes.description}>
           {getDescription(error)}
         </Text>
-        <Group justify="center">
-          <Button
-            variant="white"
-            size="md"
-            onClick={() => window.location.reload()}
-          >
-            Refresh the page
-          </Button>
-        </Group>
       </Container>
     </div>
   );

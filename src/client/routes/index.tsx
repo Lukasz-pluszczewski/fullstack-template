@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
-import Layout from '../platform/Layout';
-import SchemeMenu from '../platform/SchemeMenu';
+import { Route, Routes } from 'react-router';
+import { Error } from '../platform/errors/Error';
+import { RouteNotFoundError } from '../platform/errors/errors';
 import Examples, {
   Dates,
   Dropzone,
@@ -26,6 +26,16 @@ export default function Router() {
         <Route path="notifications" element={<Notifications />} />
         <Route path="spotlight" element={<Spotlight />} />
       </Route>
+      <Route
+        path="*"
+        element={
+          <Error
+            error={
+              new RouteNotFoundError({ message: 'Not found', httpStatus: 404 })
+            }
+          />
+        }
+      />
 
       {/*<Route element={<AuthLayout />}>*/}
       {/*  <Route path="login" element={<Login />} />*/}

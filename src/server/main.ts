@@ -12,6 +12,7 @@ ViteExpress.config({
 
 (async function () {
   simpleExpress<RouteParams>({
+    port: config.port,
     routes: [
       ['/api', routes],
       [
@@ -30,10 +31,13 @@ ViteExpress.config({
       config,
     },
   })
-    .then(({ app }) => {
-      ViteExpress.listen(app, config.port, () =>
-        console.log(`Server is listening on port ${config.port}...`)
-      );
+    .then(({ app, server, address, port }) => {
+      ViteExpress.bind(app, server, async () => {
+        const { root, base } = await ViteExpress.getViteConfig();
+        console.log(
+          `Serving app from root ${root}; listening on :${port}${base}`
+        );
+      });
     })
     .catch((error) => console.error('Error', error));
 })();

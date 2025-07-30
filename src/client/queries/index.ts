@@ -1,7 +1,6 @@
 import { QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosRequestConfig } from 'axios';
 import { ZodType } from 'zod';
-import { config } from '../platform/config';
 
 const defaultOptions = {
   refetchOnWindowFocus: false,
@@ -25,7 +24,6 @@ export const useCustomQuery = <
     queryKey: key,
     queryFn: async () => {
       const { data } = await axios({
-        baseURL: config.apiUrl,
         ...axiosParams,
       });
       if (!schema) {
