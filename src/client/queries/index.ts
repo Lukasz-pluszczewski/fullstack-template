@@ -37,5 +37,5 @@ export const useCustomQuery = <
 };
 
 export const QUERY_KEYS = {
-  EXAMPLE: 'example',
+  HEALTH: 'health',
 };

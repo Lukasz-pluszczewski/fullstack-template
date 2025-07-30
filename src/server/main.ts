@@ -31,7 +31,7 @@ ViteExpress.config({
       config,
     },
   })
-    .then(({ app, server, address, port }) => {
+    .then(({ app, server, port }) => {
       ViteExpress.bind(app, server, async () => {
         const { root, base } = await ViteExpress.getViteConfig();
         console.log(

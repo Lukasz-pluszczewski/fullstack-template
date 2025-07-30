@@ -10,13 +10,13 @@ const DEFAULT_MESSAGE = {
   '404': [
     'Page not found',
     <>
-      You've reached the end of the internet. There is nothing left.
+      You've finally reached the end of the internet. There is nothing left.
       <br />
       <Group justify="center">
         <Link
           to="/"
           label={
-            <Button variant="white" size="md">
+            <Button variant="subtle" size="md">
               Go home
             </Button>
           }
@@ -40,7 +40,7 @@ const DEFAULT_MESSAGE = {
       <br />
       <Group justify="center">
         <Button
-          variant="white"
+          variant="subtle"
           size="md"
           onClick={() => window.location.reload()}
         >
@@ -92,14 +92,12 @@ const getDescription = (error?: BaseError) => {
 export function Error({ error }: { error: BaseError }) {
   console.log('Error', error);
   return (
-    <div className={classes.root}>
-      <Container>
-        <div className={classes.label}>{error?.httpStatus || 500}</div>
-        <Title className={classes.title}>{getTitle(error?.httpStatus)}</Title>
-        <Text size="lg" ta="center" className={classes.description}>
-          {getDescription(error)}
-        </Text>
-      </Container>
-    </div>
+    <Container className={classes.root}>
+      <div className={classes.label}>{error?.httpStatus || 500}</div>
+      <Title className={classes.title}>{getTitle(error?.httpStatus)}</Title>
+      <Text c="dimmed" size="lg" ta="center" className={classes.description}>
+        {getDescription(error)}
+      </Text>
+    </Container>
   );
 }

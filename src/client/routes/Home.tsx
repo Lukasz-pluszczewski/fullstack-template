@@ -1,5 +1,7 @@
 import Layout from '../platform/Layout';
+import { useHealth } from '../queries/health';
 
 export default function Home() {
-  return <Layout>Home</Layout>;
+  const { data, isLoading } = useHealth();
+  return <Layout>Server status: {isLoading ? 'loading' : data?.status}</Layout>;
 }
