@@ -8,7 +8,7 @@ import '@mantine/dates/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ComposeContextProviders } from './platform/ComposeContextProviders';
 import { ConfigLoader } from './platform/config';
-import { theme } from './platform/theme';
+import { theme } from './platform/layout/theme';
 import Router from './routes';
 
 const queryClient = new QueryClient();

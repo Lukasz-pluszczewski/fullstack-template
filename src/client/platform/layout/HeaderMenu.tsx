@@ -1,7 +1,7 @@
 import { IconChevronDown } from '@tabler/icons-react';
 import { Box, Burger, Center, Container, Group, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import NavLink from './NavLink';
+import NavLink from '../NavLink';
 import SchemeMenu from './SchemeMenu';
 import classes from './HeaderMenu.module.css';
 

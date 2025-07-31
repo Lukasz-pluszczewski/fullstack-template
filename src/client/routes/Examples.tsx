@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { DatePickerInput } from '@mantine/dates';
-import Layout from '../platform/Layout';
-import SchemeMenu from '../platform/SchemeMenu';
+import Layout from '../platform/layout/Layout';
 
 export default function Examples() {
   return <Layout>Examples</Layout>;

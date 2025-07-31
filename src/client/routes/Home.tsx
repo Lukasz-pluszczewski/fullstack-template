@@ -1,4 +1,4 @@
-import Layout from '../platform/Layout';
+import Layout from '../platform/layout/Layout';
 import { useHealth } from '../queries/health';
 
 export default function Home() {
