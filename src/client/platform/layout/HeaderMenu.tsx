@@ -11,6 +11,7 @@ const links = [
     link: '/examples',
     label: 'Examples',
     links: [
+      { link: '/examples/persistance', label: 'Persistance' },
       { link: '/examples/form', label: 'Form' },
       { link: '/examples/table', label: 'Table' },
       { link: '/examples/dropzone', label: 'Dropzone' },

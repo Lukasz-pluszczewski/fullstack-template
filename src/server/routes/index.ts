@@ -1,8 +1,10 @@
-import { Routes } from 'simple-express-framework';
-import { RouteNotFoundError } from '../errorHandling/errors';
+import { Routes, wrapMiddleware } from 'simple-express-framework';
 import { RouteParams } from '../types';
+import { persistCollection, persistKeyValue } from 'fullstack-simple-persist/express';
 
 const routes: Routes<RouteParams>[] = [
+  ['/keyvalue', wrapMiddleware(persistKeyValue('keyvalue'))],
+  ['/collection', wrapMiddleware(persistCollection('collection'))],
   [
     '/example/*path',
     {

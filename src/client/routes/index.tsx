@@ -7,6 +7,7 @@ import Examples, {
   Form,
   Modal,
   Notifications,
+  Persistence,
   Spotlight,
   Table,
 } from './Examples';
@@ -18,6 +19,7 @@ export default function Router() {
       <Route index element={<Home />} />
       <Route path="examples">
         <Route index element={<Examples />} />
+        <Route path="persistance" element={<Persistence />} />
         <Route path="form" element={<Form />} />
         <Route path="table" element={<Table />} />
         <Route path="dropzone" element={<Dropzone />} />

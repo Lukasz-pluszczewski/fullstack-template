@@ -1,10 +1,54 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
+import { Box, Button, Checkbox, Group, TextInput } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import Layout from '../platform/layout/Layout';
+import { createPersistCollection, createPersistKeyValue } from 'fullstack-simple-persist/react';
+
 
 export default function Examples() {
   return <Layout>Examples</Layout>;
+}
+
+const { PersistKeyValue, useKeyValue } = createPersistKeyValue('/api/keyvalue');
+const { PersistCollection, useCollection } = createPersistCollection('/api/collection');
+export function PersistenceChild() {
+  const [username, setUsername] = useKeyValue('username');
+  const [kvAll, { setAll: setKvAll, setMany, setKey, deleteKey }] = useKeyValue();
+  const [todos, { setItems, setItem, updateItem, deleteItem, addItem }] = useCollection();
+
+  return (
+    <>
+      <TextInput value={username ?? ''} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
+
+      <pre>All KV: {JSON.stringify(kvAll, null, 2)}</pre>
+
+      <button onClick={() => addItem({ text: 'New', done: false })}>Add Todo</button>
+      {todos ? (
+        todos.map((todo, index) => (
+          <Group key={todo.id}>
+            <TextInput value={todo.text} onChange={(event) => updateItem(todo.id, { text: event.currentTarget.value })} />
+            <Checkbox
+              checked={todo.done}
+              onChange={(event) => updateItem(todo.id, { done: event.currentTarget.checked })}
+            />
+            <Button onClick={() => deleteItem(todo.id)}>Delete</Button>
+          </Group>
+        ))
+      ) : null}
+
+      <pre>Todos: {JSON.stringify(todos, null, 2)}</pre>
+    </>
+  );
+}
+export function Persistence() {
+  return <Layout>
+    <PersistKeyValue>
+      <PersistCollection>
+        <PersistenceChild />
+      </PersistCollection>
+    </PersistKeyValue>
+  </Layout>;
 }
 
 export function Form() {
