@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -w src/server -x tsx --env-file ./.env src/server/main.ts",
-    "start": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build"
+    "dev": "bun --env-file .env src/server/main.ts",
+    "dev-node": "nodemon -w src/server -x tsx watch --env-file ./.env src/server/main.ts",
+    "start": "NODE_ENV=production bun src/server/main.ts",
+    "start-node": "NODE_ENV=production tsx src/server/main.ts",
+    "build": "bunx --bun vite build",
+    "build-node": "vite build",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@mantine/core": "^8.2.1",
