@@ -14,6 +14,7 @@
         "@mantine/spotlight": "^8.2.1",
         "@tabler/icons-react": "^3.34.1",
         "@tanstack/react-query": "^5.83.0",
+        "async-collection-utils": "^1.1.0",
         "axios": "^1.11.0",
         "dayjs": "^1.11.13",
         "express": "^5.1.0",
@@ -277,6 +278,8 @@
     "accepts": ["accepts@2.0.0", "", { "dependencies": { "mime-types": "^3.0.0", "negotiator": "^1.0.0" } }, "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng=="],
 
     "anymatch": ["anymatch@3.1.3", "", { "dependencies": { "normalize-path": "^3.0.0", "picomatch": "^2.0.4" } }, "sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw=="],
+
+    "async-collection-utils": ["async-collection-utils@1.1.0", "", {}, "sha512-wOXMLV1jUwPt1YmXw/Qf7R9X9AfHIB5M0dUVtop4R+2NAMliq9aRKnhawqn9temvJqW8tWIgDm4CtKOJIYertQ=="],
 
     "asynckit": ["asynckit@0.4.0", "", {}, "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="],
 
