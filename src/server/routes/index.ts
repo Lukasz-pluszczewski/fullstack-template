@@ -1,10 +1,11 @@
-import { Routes, wrapMiddleware } from 'simple-express-framework';
+import { Routes, wrapMiddleware as w } from 'simple-express-framework';
 import { RouteParams } from '../types';
 import { persistCollection, persistKeyValue } from 'fullstack-simple-persist/express';
+import { RouteNotFoundError } from '../errorHandling/errors.js';
 
 const routes: Routes<RouteParams>[] = [
-  ['/keyvalue', wrapMiddleware(persistKeyValue('keyvalue'))],
-  ['/collection', wrapMiddleware(persistCollection('collection'))],
+  ['/keyvalue', w(persistKeyValue('keyvalue'))],
+  ['/collection', w(persistCollection('collection'))],
   [
     '/example/*path',
     {
@@ -32,9 +33,9 @@ const routes: Routes<RouteParams>[] = [
       }),
     },
   ],
-  // ['/*path', {
-  //   get: () => new RouteNotFoundError({ devMessage: 'You ran out of routes!' }),
-  // }],
+  ['/*path', {
+    get: () => new RouteNotFoundError({ devMessage: 'You ran out of routes!' }),
+  }],
 ];
 
 export default routes;

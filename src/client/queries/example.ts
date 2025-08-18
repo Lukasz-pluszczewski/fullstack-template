@@ -1,6 +1,7 @@
 import z from 'zod';
-import { QUERY_KEYS } from '../queries';
-import { useCustomMutation } from './index';
+import { useCustomMutation } from '../platform/react-query';
+import { QUERY_KEYS } from './keys';
+
 
 export const exampleSchema = z.object({
   foo: z.string().min(1, 'Foo is required'),

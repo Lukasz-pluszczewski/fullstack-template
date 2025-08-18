@@ -1,7 +1,8 @@
 import z from 'zod';
-import { QUERY_KEYS, useCustomQuery } from './index';
+import { useCustomQuery } from '../platform/react-query';
+import { QUERY_KEYS } from './keys';
 
-export const exampleSchema = z.object({
+export const healthSchema = z.object({
   status: z.string(),
 });
 export const useHealth = (enabled = true) =>
@@ -11,7 +12,7 @@ export const useHealth = (enabled = true) =>
       url: '/api/health',
       method: 'GET',
     },
-    exampleSchema,
+    healthSchema,
     {
       placeholderData: {
         status: '',
