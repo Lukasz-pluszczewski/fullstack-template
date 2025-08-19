@@ -5,22 +5,26 @@ const config = {
   trailingComma: 'es5',
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
-    '.*styles.css$',
-    '',
-    'dayjs',
     '^react$',
-    '^next$',
-    '^next/.*$',
     '<BUILTIN_MODULES>',
     '<THIRD_PARTY_MODULES>',
-    '^@mantine/(.*)$',
-    '^@mantinex/(.*)$',
-    '^@mantine-tests/(.*)$',
-    '^@docs/(.*)$',
-    '^@/.*$',
-    '^../(?!.*.css$).*$',
-    '^./(?!.*.css$).*$',
-    '\\.css$',
+    '',
+    // your internal JS (no styles)
+    '^@/(?!.*[.](css|scss)$).*',
+    '^(?!.*[.](css|scss)$)\\.{1,2}/.*',
+    '',
+    // Mantine & friends (JS only)
+    '^@mantine/(?!.*[.](css|scss)$).*',
+    '^@mantinex/(?!.*[.](css|scss)$).*',
+    '^@mantine-tests/(?!.*[.](css|scss)$).*',
+    '^@docs/(?!.*[.](css|scss)$).*',
+    '',
+    // third-party styles (incl. Mantine styles)
+    '^(?!@/)(?!\\.{1,2}/).+[.](css|scss)$',
+    '',
+    // your local styles
+    '^@/.+[.](css|scss)$',
+    '^\\.{1,2}/.+[.](css|scss)$',
   ],
   overrides: [
     {
