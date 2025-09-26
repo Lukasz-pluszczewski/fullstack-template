@@ -5,7 +5,13 @@ import NavLink from '../NavLink';
 import SchemeMenu from './SchemeMenu';
 import classes from './HeaderMenu.module.css';
 
-const links = [
+type Link = {
+  link: string;
+  label: string;
+  links?: Link[];
+};
+
+const links: Link[] = [
   { link: '/', label: 'Home' },
   {
     link: '/examples',
