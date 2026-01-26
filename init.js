@@ -42,6 +42,18 @@ const questions = [
   },
   {
     type: 'input',
+    name: 'dockerContainerName',
+    message: "Docker container name",
+    default: ({ packageName }) => packageName,
+  },
+  {
+    type: 'input',
+    name: 'dockerImageName',
+    message: "Docker image name",
+    default: ({ dockerContainerName }) => `registry.gitlab.com/${dockerContainerName}/${dockerContainerName}:latest`,
+  },
+  {
+    type: 'input',
     name: 'version',
     message: "Version (package.json)",
     validate: value => {

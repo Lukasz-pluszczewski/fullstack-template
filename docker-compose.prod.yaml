@@ -1,0 +1,12 @@
+services:
+  ${dockerContainerName}:
+    image: ${dockerImageName}
+    networks:
+      - pangolin-network
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+networks:
+  pangolin-network:
+    external: true
