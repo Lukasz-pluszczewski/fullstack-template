@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+const booleanSchema = z
+  .union([z.string(), z.number()])
+  .transform((v: any) => v === 'true' || Boolean(parseInt(v)));
+
 const configSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']),
   port: z.coerce.number().min(1).max(65535),
@@ -8,10 +12,17 @@ const configSchema = z.object({
 export type Config = z.infer<typeof configSchema>;
 
 const config = {
-  NODE_ENV: process.env.NODE_ENV || 'production',
-  port: process.env.PORT || 8080,
+  NODE_ENV: process.env.NODE_ENV,
+  port: process.env.PORT,
 } as const;
 
-console.log('Config loaded', config);
+const parsedConfig = configSchema.safeParse(config);
 
-export default configSchema.parse(config);
+if (!parsedConfig.success) {
+  console.error('Config validation failed', parsedConfig.error);
+  throw parsedConfig.error;
+}
+
+console.log('Config loaded successfully', parsedConfig.data);
+
+export default parsedConfig.data;

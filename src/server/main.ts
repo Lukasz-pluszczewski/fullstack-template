@@ -2,7 +2,7 @@ import { simpleExpress } from 'simple-express-framework';
 import ViteExpress from 'vite-express';
 import config from './config';
 import errorHandlers from './errorHandling/errorHandlers';
-import routes from './routes';
+import routes from './index';
 import { RouteParams } from './types';
 
 ViteExpress.config({

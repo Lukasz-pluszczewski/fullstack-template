@@ -29,6 +29,9 @@ const links: Link[] = [
   },
 ];
 
+
+const DEFAULT_PAGE_TITLE = '${ pageTitleHtml }';
+
 export function HeaderMenu() {
   const [opened, { toggle }] = useDisclosure(false);
 
@@ -75,7 +78,7 @@ export function HeaderMenu() {
       <Container size="md">
         <div className={classes.inner}>
           <Group>
-            <Box>Logo goes here</Box>
+            <Box>{DEFAULT_PAGE_TITLE}</Box>
             <Group gap={5} visibleFrom="sm">
               {items}
             </Group>

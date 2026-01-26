@@ -1,7 +1,7 @@
 {
-  "name": "srambda",
+  "name": "${ packageName }",
   "private": true,
-  "version": "0.0.0",
+  "version": "${ version }",
   "type": "module",
   "scripts": {
     "dev": "bun --env-file .env --hot src/server/main.ts",
@@ -10,7 +10,8 @@
     "start-node": "NODE_ENV=production tsx src/server/main.ts",
     "build": "bunx --bun vite build",
     "build-node": "vite build",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "init": "bun init.js"
   },
   "dependencies": {
     "@mantine/core": "^8.3.2",
@@ -50,11 +51,13 @@
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",
+    "inquirer": "^13.2.1",
     "nodemon": "^3.1.10",
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.6.2",
+    "replace-in-file": "^8.4.0",
     "vite": "^7.1.7"
   }
 }

@@ -1,7 +1,11 @@
 import { Route, Routes } from 'react-router';
+
+
+
 import { Error } from '../platform/errors/Error';
 import { RouteNotFoundError } from '../platform/errors/errors';
 import Examples, {
+  Charts,
   Dates,
   Dropzone,
   Form,
@@ -13,12 +17,17 @@ import Examples, {
 } from './Examples';
 import Home from './Home';
 
+
+
+
+
 export default function Router() {
   return (
     <Routes>
       <Route index element={<Home />} />
       <Route path="examples">
         <Route index element={<Examples />} />
+        <Route path="charts" element={<Charts />} />
         <Route path="persistance" element={<Persistence />} />
         <Route path="form" element={<Form />} />
         <Route path="table" element={<Table />} />

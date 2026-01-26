@@ -51,6 +51,59 @@ export function Persistence() {
   </Layout>;
 }
 
+
+export function Charts() {
+  const data = [
+    { month: 'Jan', value: 20 },
+    { month: 'Feb', value: 45 },
+    { month: 'Mar', value: 30 },
+    { month: 'Apr', value: 60 },
+  ];
+
+  return (
+    <Layout>
+      <Stack>
+        <BarChart
+          h={200}
+          w={500}
+          data={[
+            { key: 'A', value: 10 },
+            { key: 'B', value: 20 },
+            { key: 'C', value: 30 },
+          ]}
+          dataKey="key"
+          orientation="vertical"
+          series={[{ name: 'value' }]}
+          tooltipProps={{
+            shared: false, // <- critical
+            trigger: 'hover', // <- critical (Recharts v3)
+            cursor: { fill: 'white' },
+          }}
+        />
+
+        <AreaChart
+          h={300}
+          data={data}
+          dataKey="month"
+          series={[{ name: 'value', color: 'blue.6' }]}
+          withDots={false} // optional: keep chart clean
+        >
+          <ReferenceDot
+            x="Mar" // MUST exactly match a `month` value
+            y={30} // numeric value on y axis
+            yAxisId="left" // make axis explicit
+            r={7}
+            fill="var(--mantine-color-red-6)"
+            stroke="var(--mantine-color-red-6)"
+            ifOverflow="visible"
+            label={{ value: 'Here', position: 'top' }}
+          />
+        </AreaChart>
+      </Stack>
+    </Layout>
+  );
+}
+
 export function Form() {
   return <Layout>Form</Layout>;
 }

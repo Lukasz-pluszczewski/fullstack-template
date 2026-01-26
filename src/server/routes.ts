@@ -1,28 +1,13 @@
 import { Routes, wrapMiddleware as w } from 'simple-express-framework';
-import { RouteParams } from '../types';
+import { RouteParams } from './types';
 import { persistCollection, persistKeyValue } from 'fullstack-simple-persist/express';
-import { RouteNotFoundError } from '../errorHandling/errors.js';
+import { RouteNotFoundError } from './errorHandling/errors.js';
+import { exampleRoute } from './modules/example';
 
 const routes: Routes<RouteParams>[] = [
   ['/keyvalue', w(persistKeyValue('keyvalue'))],
   ['/collection', w(persistCollection('collection'))],
-  [
-    '/example/*path',
-    {
-      get: async ({ body, query, params, originalUrl, protocol }) => {
-        return {
-          body: {
-            message: 'Request success',
-            body,
-            query,
-            params,
-            originalUrl,
-            protocol,
-          },
-        };
-      },
-    },
-  ],
+  ...exampleRoute,
   [
     '/health',
     {
