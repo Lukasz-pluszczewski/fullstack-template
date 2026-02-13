@@ -19,6 +19,9 @@ bun run start
 
 # Format code
 bun run prettier
+
+# Type check
+bun run typecheck
 ```
 
 **No testing framework is currently configured.**

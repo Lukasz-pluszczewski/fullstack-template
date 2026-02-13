@@ -5,11 +5,14 @@ type AnyLog = unknown;
 
 export type TimerMeta = Record<string, AnyLog> | AnyLog;
 
+type Logger = typeof console.log | false;
+
 type TimerState = {
   id: string;
   color: string;
   startMs: number;
   lastMs: number;
+  logger?: Logger;
 };
 
 type TimerInstance = {
@@ -19,14 +22,14 @@ type TimerInstance = {
    * - timer(meta)
    * - timer()
    */
-  (label?: string | TimerMeta, meta?: TimerMeta): void;
+  (label?: string | TimerMeta, meta?: TimerMeta): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
   /**
    * Ends the timer and logs total + last lap.
    * - timer.end("label", meta)
    * - timer.end(meta)
    * - timer.end()
    */
-  end(label?: string | TimerMeta, meta?: TimerMeta): void;
+  end(label?: string | TimerMeta, meta?: TimerMeta): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
   /** Underlying timer id */
   readonly id: string;
 };
@@ -47,12 +50,12 @@ export type TimeFn = {
   /**
    * time("id") works like start("id") and returns an instance.
    */
-  (id: string): TimerInstance;
+  (id: string, logger?: Logger): TimerInstance;
 
   /**
    * Starts a timer (and returns an instance, so you can optionally store it).
    */
-  start(id: string): TimerInstance;
+  start(id: string, logger?: Logger): TimerInstance;
 
   /**
    * Splits a timer (lap + total).
@@ -61,7 +64,7 @@ export type TimeFn = {
    * - split(id, label)
    * - split(id, label, meta)
    */
-  split(...args: SplitArgs): void;
+  split(...args: SplitArgs): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
 
   /**
    * Ends a timer (total + last lap).
@@ -70,7 +73,7 @@ export type TimeFn = {
    * - end(id, label)
    * - end(id, label, meta)
    */
-  end(...args: EndArgs): void;
+  end(...args: EndArgs): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
 };
 
 /**
@@ -166,9 +169,9 @@ function parseLabelAndMeta(
   return {};
 }
 
-function logStart(id: string): void {
+function logStart(id: string, logger: Logger = console.log): void {
   // Start: ID only (normal console color)
-  console.log(id);
+  logger && logger('Timer start', id);
 }
 
 function logSplitOrEnd(params: {
@@ -179,7 +182,8 @@ function logSplitOrEnd(params: {
   lapMs: number;
   label?: string;
   meta?: TimerMeta;
-}): void {
+}, logger: Logger = console.log): void {
+  if (!logger) return;
   const { id, color, totalMs, lapMs, label, meta } = params;
 
   const total = formatMs(totalMs);
@@ -198,7 +202,7 @@ function logSplitOrEnd(params: {
       : `[${total} | last +${lap}]`;
 
   if (label) {
-    console.log(
+    logger(
       `%c${bracketText}%c ${id} %c${label}%c`,
       bracketStyle,
       resetStyle,
@@ -206,16 +210,16 @@ function logSplitOrEnd(params: {
       resetStyle
     );
   } else {
-    console.log(`%c${bracketText}%c ${id}`, bracketStyle, resetStyle);
+    logger(`%c${bracketText}%c ${id}`, bracketStyle, resetStyle);
   }
 
   if (meta !== undefined) {
     // Log extra data like normal console.log (can be object, string, anything)
-    console.log(meta);
+    logger(meta);
   }
 }
 
-function ensureTimer(id: string): TimerState {
+function ensureTimer(id: string, logger: Logger = console.log): TimerState {
   const existing = timers.get(id);
   if (existing) return existing;
 
@@ -226,22 +230,24 @@ function ensureTimer(id: string): TimerState {
     color: colorForId(id),
     startMs: t,
     lastMs: t,
+    logger,
   };
   timers.set(id, state);
-  logStart(id);
+  logStart(id, logger);
   return state;
 }
 
-function startImpl(id: string): TimerInstance {
+function startImpl(id: string, logger: Logger = console.log): TimerInstance {
   const t = nowMs();
   const state: TimerState = {
     id,
     color: colorForId(id),
     startMs: t,
     lastMs: t,
+    logger,
   };
   timers.set(id, state);
-  logStart(id);
+  logStart(id, logger);
 
   const instance = ((
     labelOrMeta?: string | TimerMeta,
@@ -259,13 +265,14 @@ function startImpl(id: string): TimerInstance {
 
   instance.end = (labelOrMeta?: string | TimerMeta, maybeMeta?: TimerMeta) => {
     const { label, meta } = parseLabelAndMeta(labelOrMeta, maybeMeta);
-    endImpl(id, label, meta);
+    const { startMs, totalMs, lapMs } = endImpl(id, label, meta);
+    return { id, startMs, totalMs, lapMs, label, meta };
   };
 
   return instance;
 }
 
-function splitImpl(id: string, label?: string, meta?: TimerMeta): void {
+function splitImpl(id: string, label?: string, meta?: TimerMeta): { startMs: number; totalMs: number; lapMs: number } {
   const state = ensureTimer(id);
   const t = nowMs();
 
@@ -282,10 +289,11 @@ function splitImpl(id: string, label?: string, meta?: TimerMeta): void {
     lapMs,
     label,
     meta,
-  });
+  }, state.logger);
+  return { startMs: state.startMs, totalMs, lapMs };
 }
 
-function endImpl(id: string, label?: string, meta?: TimerMeta): void {
+function endImpl(id: string, label?: string, meta?: TimerMeta): { startMs: number; totalMs: number; lapMs: number } {
   const state = ensureTimer(id);
   const t = nowMs();
 
@@ -300,23 +308,28 @@ function endImpl(id: string, label?: string, meta?: TimerMeta): void {
     lapMs,
     label,
     meta,
-  });
+  }, state.logger);
 
   timers.delete(id);
+
+  return { startMs: state.startMs, totalMs, lapMs };
 }
 
-export const time: TimeFn = Object.assign((id: string) => startImpl(id), {
-  start: (id: string) => startImpl(id),
+export const time: TimeFn = Object.assign((id: string, logger: Logger = console.log) => startImpl(id, logger), {
+  start: (id: string, logger: Logger = console.log) => startImpl(id, logger),
 
   split: (...args: SplitArgs) => {
     const [id, a, b] = args as [string, unknown?, unknown?];
     const { label, meta } = parseLabelAndMeta(a as any, b as any);
-    splitImpl(id, label, meta);
+    const { startMs, totalMs, lapMs } = splitImpl(id, label, meta);
+    return { id, startMs, totalMs, lapMs, label, meta };
   },
 
   end: (...args: EndArgs) => {
     const [id, a, b] = args as [string, unknown?, unknown?];
     const { label, meta } = parseLabelAndMeta(a as any, b as any);
-    endImpl(id, label, meta);
+    const { startMs, totalMs, lapMs } = endImpl(id, label, meta);
+    return { id, startMs, totalMs, lapMs, label, meta };
   },
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Omit<TimeFn, keyof Function>);

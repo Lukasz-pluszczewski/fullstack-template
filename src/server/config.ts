@@ -1,22 +1,21 @@
 import { map } from 'async-collection-utils';
 import { z } from 'zod';
 
+import { ConfigValidationError } from './errorHandling/errors';
 import { detectSecret, formatSecret } from '../shared/utilities/secrets';
-
-const booleanSchema = z
-  .union([z.string(), z.number()])
-  .transform((v: any) => v === 'true' || Boolean(parseInt(v)));
 
 // Config validation
 const configSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']),
-  port: z.coerce.number().min(1).max(65535),
+  PORT: z.coerce.number().min(1).max(65535),
+  INCLUDE_STACK_IN_ERROR_RESPONSES: z.stringbool().default(false),
 });
 
 // Config mapping
 const config = {
   NODE_ENV: process.env.NODE_ENV,
-  port: process.env.PORT,
+  PORT: process.env.PORT,
+  INCLUDE_STACK_IN_ERROR_RESPONSES: process.env.INCLUDE_STACK_IN_ERROR_RESPONSES,
 } as const;
 
 // List of config keys containing secrets
@@ -30,8 +29,11 @@ const IGNORELIST = ['OPEN_AI_URL'];
 const parsedConfig = configSchema.safeParse(config);
 
 if (!parsedConfig.success) {
-  console.error('Config validation failed', config, parsedConfig.error);
-  throw parsedConfig.error;
+  console.error('Config validation failed', parsedConfig.error);
+  throw new ConfigValidationError({
+    message: 'Config validation failed',
+    cause: parsedConfig.error,
+  });
 }
 
 
@@ -45,7 +47,6 @@ console.log(
     return value;
   })
 );
-
 
 export type Config = z.infer<typeof configSchema>;
 export default parsedConfig.data;

@@ -1,7 +1,7 @@
-import { RouteParams } from '../../types';
+import { RouteParams, Locals } from '../../types';
 import { Routes } from 'simple-express-framework';
 
-export const exampleRoute: Routes<RouteParams>[] = [
+export const exampleRoute: Routes<RouteParams, Locals>[] = [
   [
     '/example/*path',
     {

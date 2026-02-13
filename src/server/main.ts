@@ -3,7 +3,7 @@ import ViteExpress from 'vite-express';
 import config from './config';
 import errorHandlers from './errorHandling/errorHandlers';
 import routes from './routes';
-import { RouteParams } from './types';
+import { Locals, RouteParams } from './types';
 
 ViteExpress.config({
   mode: config.NODE_ENV,
@@ -11,8 +11,8 @@ ViteExpress.config({
 });
 
 (async function () {
-  simpleExpress<RouteParams>({
-    port: config.port,
+  simpleExpress<RouteParams, Locals>({
+    port: config.PORT,
     routes: [
       ['/api', routes],
       [
