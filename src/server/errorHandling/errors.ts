@@ -1,11 +1,11 @@
 import statusCodes from 'http-status-codes';
 
 type BaseErrorParams = {
-  message?: string,
-  httpStatus?: number,
-  devMessage?: string,
-  details?: any,
-  cause?: any,
+  message?: string;
+  httpStatus?: number;
+  devMessage?: string;
+  details?: any;
+  cause?: any;
 };
 export class BaseError extends Error {
   constructor({
@@ -35,6 +35,14 @@ export class InitializationError extends BaseError {
 }
 
 export class ConfigValidationError extends InitializationError {
+  constructor({
+    inputConfig,
+    ...rest
+  }: BaseErrorParams & { inputConfig?: Record<string, unknown> } = {}) {
+    super({ ...rest });
+    this.inputConfig = inputConfig;
+  }
+  inputConfig?: Record<string, unknown>;
   defaultMessage = 'Config validation error';
 }
 

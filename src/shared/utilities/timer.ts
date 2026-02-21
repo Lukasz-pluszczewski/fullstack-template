@@ -22,14 +22,34 @@ type TimerInstance = {
    * - timer(meta)
    * - timer()
    */
-  (label?: string | TimerMeta, meta?: TimerMeta): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
+  (
+    label?: string | TimerMeta,
+    meta?: TimerMeta
+  ): {
+    id: string;
+    startMs: number;
+    totalMs: number;
+    lapMs: number;
+    label?: string;
+    meta?: TimerMeta;
+  };
   /**
    * Ends the timer and logs total + last lap.
    * - timer.end("label", meta)
    * - timer.end(meta)
    * - timer.end()
    */
-  end(label?: string | TimerMeta, meta?: TimerMeta): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
+  end(
+    label?: string | TimerMeta,
+    meta?: TimerMeta
+  ): {
+    id: string;
+    startMs: number;
+    totalMs: number;
+    lapMs: number;
+    label?: string;
+    meta?: TimerMeta;
+  };
   /** Underlying timer id */
   readonly id: string;
 };
@@ -64,7 +84,14 @@ export type TimeFn = {
    * - split(id, label)
    * - split(id, label, meta)
    */
-  split(...args: SplitArgs): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
+  split(...args: SplitArgs): {
+    id: string;
+    startMs: number;
+    totalMs: number;
+    lapMs: number;
+    label?: string;
+    meta?: TimerMeta;
+  };
 
   /**
    * Ends a timer (total + last lap).
@@ -73,7 +100,19 @@ export type TimeFn = {
    * - end(id, label)
    * - end(id, label, meta)
    */
-  end(...args: EndArgs): { id: string; startMs: number; totalMs: number; lapMs: number; label?: string; meta?: TimerMeta };
+  end(...args: EndArgs): {
+    id: string;
+    startMs: number;
+    totalMs: number;
+    lapMs: number;
+    label?: string;
+    meta?: TimerMeta;
+  };
+
+  /**
+   * Converts ms value to human-readable string
+   */
+  formatMs: typeof formatMs;
 };
 
 /**
@@ -130,7 +169,7 @@ function colorForId(id: string): string {
   return COLORS[idx];
 }
 
-function formatMs(ms: number): string {
+export function formatMs(ms: number): string {
   if (!Number.isFinite(ms)) return `${ms}ms`;
 
   const abs = Math.abs(ms);
@@ -174,15 +213,18 @@ function logStart(id: string, logger: Logger = console.log): void {
   logger && logger('Timer start', id);
 }
 
-function logSplitOrEnd(params: {
-  kind: 'split' | 'end';
-  id: string;
-  color: string;
-  totalMs: number;
-  lapMs: number;
-  label?: string;
-  meta?: TimerMeta;
-}, logger: Logger = console.log): void {
+function logSplitOrEnd(
+  params: {
+    kind: 'split' | 'end';
+    id: string;
+    color: string;
+    totalMs: number;
+    lapMs: number;
+    label?: string;
+    meta?: TimerMeta;
+  },
+  logger: Logger = console.log
+): void {
   if (!logger) return;
   const { id, color, totalMs, lapMs, label, meta } = params;
 
@@ -272,7 +314,11 @@ function startImpl(id: string, logger: Logger = console.log): TimerInstance {
   return instance;
 }
 
-function splitImpl(id: string, label?: string, meta?: TimerMeta): { startMs: number; totalMs: number; lapMs: number } {
+function splitImpl(
+  id: string,
+  label?: string,
+  meta?: TimerMeta
+): { startMs: number; totalMs: number; lapMs: number } {
   const state = ensureTimer(id);
   const t = nowMs();
 
@@ -281,55 +327,70 @@ function splitImpl(id: string, label?: string, meta?: TimerMeta): { startMs: num
 
   state.lastMs = t;
 
-  logSplitOrEnd({
-    kind: 'split',
-    id,
-    color: state.color,
-    totalMs,
-    lapMs,
-    label,
-    meta,
-  }, state.logger);
+  logSplitOrEnd(
+    {
+      kind: 'split',
+      id,
+      color: state.color,
+      totalMs,
+      lapMs,
+      label,
+      meta,
+    },
+    state.logger
+  );
   return { startMs: state.startMs, totalMs, lapMs };
 }
 
-function endImpl(id: string, label?: string, meta?: TimerMeta): { startMs: number; totalMs: number; lapMs: number } {
+function endImpl(
+  id: string,
+  label?: string,
+  meta?: TimerMeta
+): { startMs: number; totalMs: number; lapMs: number } {
   const state = ensureTimer(id);
   const t = nowMs();
 
   const totalMs = t - state.startMs;
   const lapMs = t - state.lastMs;
 
-  logSplitOrEnd({
-    kind: 'end',
-    id,
-    color: state.color,
-    totalMs,
-    lapMs,
-    label,
-    meta,
-  }, state.logger);
+  logSplitOrEnd(
+    {
+      kind: 'end',
+      id,
+      color: state.color,
+      totalMs,
+      lapMs,
+      label,
+      meta,
+    },
+    state.logger
+  );
 
   timers.delete(id);
 
   return { startMs: state.startMs, totalMs, lapMs };
 }
 
-export const time: TimeFn = Object.assign((id: string, logger: Logger = console.log) => startImpl(id, logger), {
-  start: (id: string, logger: Logger = console.log) => startImpl(id, logger),
+export const time: TimeFn = Object.assign(
+  (id: string, logger: Logger = console.log) => startImpl(id, logger),
+  {
+    start: (id: string, logger: Logger = console.log) => startImpl(id, logger),
 
-  split: (...args: SplitArgs) => {
-    const [id, a, b] = args as [string, unknown?, unknown?];
-    const { label, meta } = parseLabelAndMeta(a as any, b as any);
-    const { startMs, totalMs, lapMs } = splitImpl(id, label, meta);
-    return { id, startMs, totalMs, lapMs, label, meta };
-  },
+    split: (...args: SplitArgs) => {
+      const [id, a, b] = args as [string, unknown?, unknown?];
+      const { label, meta } = parseLabelAndMeta(a as any, b as any);
+      const { startMs, totalMs, lapMs } = splitImpl(id, label, meta);
+      return { id, startMs, totalMs, lapMs, label, meta };
+    },
 
-  end: (...args: EndArgs) => {
-    const [id, a, b] = args as [string, unknown?, unknown?];
-    const { label, meta } = parseLabelAndMeta(a as any, b as any);
-    const { startMs, totalMs, lapMs } = endImpl(id, label, meta);
-    return { id, startMs, totalMs, lapMs, label, meta };
-  },
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-} satisfies Omit<TimeFn, keyof Function>);
+    end: (...args: EndArgs) => {
+      const [id, a, b] = args as [string, unknown?, unknown?];
+      const { label, meta } = parseLabelAndMeta(a as any, b as any);
+      const { startMs, totalMs, lapMs } = endImpl(id, label, meta);
+      return { id, startMs, totalMs, lapMs, label, meta };
+    },
+
+    formatMs: formatMs,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  } satisfies Omit<TimeFn, keyof Function>
+);

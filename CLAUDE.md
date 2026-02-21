@@ -45,6 +45,35 @@ Full-stack TypeScript application with React frontend and Express backend, bundl
 - Built-in persistence via `fullstack-simple-persist` at `/api/keyvalue` and `/api/collection` endpoints
 - Health check at `/api/health`
 
+### Dependency Injection & Services
+
+Services use **factory functions** (not classes). Each service file exports a `create*` function and a type derived from its return type:
+
+```typescript
+// Multiply.service.ts — service with no dependencies
+export type MultiplyService = ReturnType<typeof createMultiplyService>;
+export const createMultiplyService = () => {
+  return {
+    multiply: (a: number, b: number) => a * b,
+  };
+};
+
+// Example.service.ts — service with dependencies injected via parameter
+export type ExampleService = ReturnType<typeof createExampleService>;
+export const createExampleService = ({ multiplyService }: { multiplyService: MultiplyService }) => {
+  return {
+    handleExample: (a: number, b: number) => multiplyService.multiply(a, b),
+  };
+};
+```
+
+**Wiring services together** — instantiate in `main.ts` and pass via `routeParams`:
+
+1. Create service instances in `main.ts`, injecting dependencies manually
+2. Add the service type to `RouteParams` in `types.ts`
+3. Pass instances into `simpleExpress({ routeParams: { ... } })`
+4. Services are then available as destructured params in route handlers (e.g. `({ exampleService }) => ...`)
+
 ### Key Patterns
 - Zod schemas for runtime validation on both client and server
 - Custom error classes extending `BaseError` for consistent error handling
