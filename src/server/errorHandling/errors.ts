@@ -10,7 +10,7 @@ type BaseErrorParams = {
 export class BaseError extends Error {
   constructor({
     message,
-    httpStatus = statusCodes.INTERNAL_SERVER_ERROR,
+    httpStatus,
     devMessage,
     details,
     cause,
@@ -25,7 +25,7 @@ export class BaseError extends Error {
   defaultMessage = 'Unknown error'; // default user-facing message
   defaultHttpStatus = statusCodes.INTERNAL_SERVER_ERROR;
   devMessage?: string; // message included in development logs
-  httpStatus: number;
+  httpStatus?: number;
   details?: any; // arbitrary data
   cause?: any;
 }
