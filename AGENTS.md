@@ -54,6 +54,16 @@ export const createExampleService = ({
 - `bun run init`: Replace scaffold placeholders (for example `${ packageName }`).
 - `bun test` or `bun test src/shared/utilities/timer.test.ts`: Run unit tests.
 
+## Architectural guidelines
+- Avoid unnecessary abstractions: keep modules simple, focused, and single responsibility
+- Always respect established patterns if asked or pointed to explicitly.
+- Explicit orchestration over indirection: route/service code should clearly show the data flow.
+- Anti-abstraction bias for transformation code: avoid “helper layers” that hide response shaping.
+- Strict legacy isolation: backward compatibility is preserved, but legacy terms/fields are not allowed to leak into V2.
+- Consistency across code, tests, docs, and Bruno collections is required, not optional.
+- Favor readability and local clarity over generic DRY abstractions, especially those that perpetuate legacy architecture.
+- Avoid unnecessary abstraction – each abstraction must have a good reason to exist. Prefer verbosity over multiplying abstractions.
+
 ## Coding Style & Naming Conventions
 - Use TypeScript with strict typing; avoid `any` unless unavoidable.
 - Formatting is enforced by Prettier (`.prettierrc.mjs`): single quotes, trailing commas (es5), sorted imports.
