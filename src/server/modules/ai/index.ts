@@ -1,7 +1,9 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
-import type {
+import {
   AssistantModelMessage,
+  FlexibleSchema,
+  Output,
   SystemModelMessage,
   UserModelMessage,
 } from 'ai';
@@ -30,7 +32,6 @@ export const providers = {
   openrouter,
   openai,
 };
-openai('');
 
 type ExtractModelId<T> = T extends (modelId: infer M) => any ? M : never;
 
@@ -67,3 +68,15 @@ export const Assistant = (
   content: AssistantModelMessage['content'],
   providerOptions?: AssistantModelMessage['providerOptions']
 ) => ({ role: 'assistant' as const, content, providerOptions });
+
+export const ObjectOutput = <TObject>(schema: FlexibleSchema<TObject>) =>
+  Output.object({
+    schema,
+  });
+
+export const ArrayOutput = <TArray extends any[]>(
+  element: FlexibleSchema<TArray[number]>
+) =>
+  Output.array({
+    element,
+  });

@@ -63,6 +63,20 @@ export const createExampleService = ({
 - Backend service files follow `Feature.service.ts` naming (for example, `Example.service.ts`, `Multiply.service.ts`).
 - Co-locate CSS modules with components using `*.module.css`.
 
+## Architecture guidelines
+- Avoid unnecessary abstractions: keep modules simple, focused, and single responsibility, each abstraction must have a good reason to exist. Prefer verbosity over multiplying abstractions.
+- Always respect established patterns if asked or pointed to explicitly.
+- Explicit orchestration over indirection: route/service code should clearly show the data flow.
+- Anti-abstraction bias for transformation code: avoid “helper layers” that hide response shaping.
+- Consistency across code, tests, docs, and Bruno collections is required, not optional.
+- Favor readability and local clarity over generic DRY abstractions, especially those that perpetuate legacy architecture.
+- Avoid helpers/utilities used once.
+- If you create a helper/utility put it in a separate file and make sure that it does not have side effects!
+- Helpers must be reusable and generalised, examples:
+  - `summarizeResults` helper that sums number of results in each category - BAD, case specific.
+  - `normalizeDataset` helper converting one shape to the other - most likely BAD, works for this particular dataset, it's better to have consistent shapes or to have a case-specific conversion inline.
+  - `countBy` - GOOD. Can be used to for results summarization and in many different places. Should be put in general `utils` module/folder/file.
+
 ## Testing Guidelines
 - Primary framework: Bun test runner (`bun:test`).
 - Test files use `*.test.ts` naming (example: `src/shared/utilities/timer.test.ts`).
