@@ -45,9 +45,7 @@ const config = {
 } as const;
 
 // List of config keys containing secrets
-const SECRETS = [
-  'OPENAI_API_KEY',
-];
+const SECRETS = ['OPENAI_API_KEY'];
 
 // List of config keys that definitely not contain secrets
 const IGNORELIST = ['OPEN_AI_URL'];
@@ -62,16 +60,19 @@ if (!parsedConfig.success) {
   });
 }
 
-
 console.log(
   'Config loaded successfully',
-  config.NODE_ENV === 'development' ? parsedConfig.data : map(parsedConfig.data, (value, key) => {
-    if (SECRETS.includes(key)) return formatSecret(value);
-    if (detectSecret(key, value, { ignorelist: IGNORELIST })) {
-      throw new Error(`"${key}" seems to be a secret. Add it to ignorelist or to "SECRETS" array in config.ts`)
-    }
-    return value;
-  })
+  config.NODE_ENV === 'development'
+    ? parsedConfig.data
+    : map(parsedConfig.data, (value, key) => {
+        if (SECRETS.includes(key)) return formatSecret(value);
+        if (detectSecret(key, value, { ignorelist: IGNORELIST })) {
+          throw new Error(
+            `"${key}" seems to be a secret. Add it to ignorelist or to "SECRETS" array in config.ts`
+          );
+        }
+        return value;
+      })
 );
 
 export type Config = z.infer<typeof configSchema>;

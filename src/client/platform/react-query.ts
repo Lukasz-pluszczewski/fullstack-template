@@ -79,7 +79,7 @@ export const useCustomMutation = <
       if (options?.onSuccess) {
         options.onSuccess(...args);
       }
-      options?.invalidateKeys?.forEach((key) => {
+      options?.invalidateKeys?.forEach(key => {
         queryClient.invalidateQueries({ queryKey: [key] });
       });
     },

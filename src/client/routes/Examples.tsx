@@ -30,7 +30,7 @@ export function PersistenceChild() {
     <>
       <TextInput
         value={username ?? ''}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={e => setUsername(e.target.value)}
         placeholder="username"
       />
 
@@ -44,13 +44,13 @@ export function PersistenceChild() {
             <Group key={todo.id}>
               <TextInput
                 value={todo.text}
-                onChange={(event) =>
+                onChange={event =>
                   updateItem(todo.id, { text: event.currentTarget.value })
                 }
               />
               <Checkbox
                 checked={todo.done}
-                onChange={(event) =>
+                onChange={event =>
                   updateItem(todo.id, { done: event.currentTarget.checked })
                 }
               />

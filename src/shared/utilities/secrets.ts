@@ -85,28 +85,28 @@ const HEXISH = /^[a-f0-9]{32,}$/i;
 const isProbablyEnvKey = (k: string) => /^[A-Z0-9_]+$/.test(k);
 
 const normalizeKey = (k: string) =>
-  (k ?? "")
+  (k ?? '')
     .toString()
     .trim()
-    .replace(/[\s.]+/g, "_")
-    .replace(/__+/g, "_");
+    .replace(/[\s.]+/g, '_')
+    .replace(/__+/g, '_');
 
 const keyLooksSecret = (rawKey: string): boolean => {
   const k = normalizeKey(rawKey);
   if (!k) return false;
 
   // Allowlist takes precedence to reduce false positives.
-  if (KEY_ALLOWLIST.some((rx) => rx.test(k))) return false;
+  if (KEY_ALLOWLIST.some(rx => rx.test(k))) return false;
 
   // Blacklist match
-  if (KEY_BLACKLIST.some((rx) => rx.test(k))) return true;
+  if (KEY_BLACKLIST.some(rx => rx.test(k))) return true;
 
   // Extra heuristics for keys:
   // - env-like uppercase with SECRET/TOKEN/PASSWORD etc.
   if (
-    isProbablyEnvKey(k) &&
-    /\b(SECRET|TOKEN|PASSWORD|PASS|PRIVATE|KEY|CREDENTIAL|SIGNING)\b/.test(k) &&
-    !/\b(PUBLIC|CLIENT_ID|PROJECT_ID|TENANT_ID|ORG_ID)\b/.test(k)
+    isProbablyEnvKey(k)
+    && /\b(SECRET|TOKEN|PASSWORD|PASS|PRIVATE|KEY|CREDENTIAL|SIGNING)\b/.test(k)
+    && !/\b(PUBLIC|CLIENT_ID|PROJECT_ID|TENANT_ID|ORG_ID)\b/.test(k)
   ) {
     return true;
   }
@@ -121,12 +121,12 @@ const keyLooksSecret = (rawKey: string): boolean => {
 // Estimate "entropy" by counting unique chars; cheap and decent for heuristics.
 const uniqueCharRatio = (s: string) => {
   if (!s) return 0;
-  const set = new Set(s.split(""));
+  const set = new Set(s.split(''));
   return set.size / s.length;
 };
 
 const looksLikeSecretString = (s: string): boolean => {
-  const str = (s ?? "").toString().trim();
+  const str = (s ?? '').toString().trim();
   if (!str) return false;
 
   // Ignore common safe-ish values
@@ -139,7 +139,7 @@ const looksLikeSecretString = (s: string): boolean => {
     return false;
 
   // If it matches known secret formats
-  if (VALUE_PATTERNS.some((rx) => rx.test(str))) return true;
+  if (VALUE_PATTERNS.some(rx => rx.test(str))) return true;
 
   // Looks like URL with embedded creds
   if (/^[a-z]+:\/\/[^/\s]+:[^@\s]+@/i.test(str)) return true;
@@ -185,30 +185,30 @@ const looksLikeSecretNumber = (n: number): boolean => {
 const looksLikeSecret = (v: any): boolean => {
   if (v == null) return false;
 
-  if (typeof v === "string") return looksLikeSecretString(v);
-  if (typeof v === "number") return looksLikeSecretNumber(v);
-  if (typeof v === "boolean") return false;
-  if (typeof v === "bigint") return String(v).length >= 10;
+  if (typeof v === 'string') return looksLikeSecretString(v);
+  if (typeof v === 'number') return looksLikeSecretNumber(v);
+  if (typeof v === 'boolean') return false;
+  if (typeof v === 'bigint') return String(v).length >= 10;
   if (v instanceof Date) return false;
 
-  if (Array.isArray(v)) return v.some((x) => looksLikeSecret(x));
+  if (Array.isArray(v)) return v.some(x => looksLikeSecret(x));
 
   // Buffers / Uint8Array etc.
   if (
-    typeof Buffer !== "undefined" &&
-    (Buffer.isBuffer(v) || v instanceof Uint8Array)
+    typeof Buffer !== 'undefined'
+    && (Buffer.isBuffer(v) || v instanceof Uint8Array)
   ) {
     // Treat binary blobs as sensitive if large enough.
     const len = (v as any).length ?? 0;
     return len >= 16;
   }
 
-  if (typeof v === "object") {
+  if (typeof v === 'object') {
     // Inspect object keys and values recursively.
     // Limit recursion depth to avoid pathological structures.
     const seen = new Set<any>();
     const walk = (obj: any, depth: number): boolean => {
-      if (!obj || typeof obj !== "object") return looksLikeSecret(obj);
+      if (!obj || typeof obj !== 'object') return looksLikeSecret(obj);
       if (seen.has(obj)) return false;
       seen.add(obj);
       if (depth <= 0) return false;
@@ -216,8 +216,7 @@ const looksLikeSecret = (v: any): boolean => {
       for (const [k, val] of Object.entries(obj)) {
         if (keyLooksSecret(k)) return true;
         if (looksLikeSecret(val)) return true;
-        if (val && typeof val === "object" && walk(val, depth - 1))
-          return true;
+        if (val && typeof val === 'object' && walk(val, depth - 1)) return true;
       }
       return false;
     };
@@ -232,10 +231,22 @@ const looksLikeSecret = (v: any): boolean => {
 export const detectSecret = (
   name: string,
   value: any,
-  { secretlist = [], ignorelist = [] }: { secretlist?: (string | RegExp)[]; ignorelist?: (string | RegExp)[] } = {}
+  {
+    secretlist = [],
+    ignorelist = [],
+  }: {
+    secretlist?: (string | RegExp)[];
+    ignorelist?: (string | RegExp)[];
+  } = {}
 ): false | { key: boolean; value: boolean } => {
-  if (secretlist.some((rx) => rx instanceof RegExp ? rx.test(name) : rx === name)) return { key: true, value: true };
-  if (ignorelist.some((rx) => rx instanceof RegExp ? rx.test(name) : rx === name)) return false;
+  if (
+    secretlist.some(rx => (rx instanceof RegExp ? rx.test(name) : rx === name))
+  )
+    return { key: true, value: true };
+  if (
+    ignorelist.some(rx => (rx instanceof RegExp ? rx.test(name) : rx === name))
+  )
+    return false;
 
   const keyFlag = keyLooksSecret(name);
   const valueFlag = looksLikeSecret(value);

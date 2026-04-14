@@ -45,7 +45,7 @@ ViteExpress.config({
       ViteExpress.bind(app, server, async () => {
         const { root, base } = await ViteExpress.getViteConfig();
         console.log(
-          `Serving frontend app from root ${root}; listening on :${port}${base}`,
+          `Serving frontend app from root ${root}; listening on :${port}${base}`
         );
       });
       console.log('Backend app listening on port', port);

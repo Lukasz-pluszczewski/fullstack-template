@@ -43,7 +43,7 @@ const createMutex = () => {
   return async <R>(fn: () => Promise<R>): Promise<R> => {
     const prev = chain;
     let release!: () => void;
-    chain = new Promise<void>((res) => (release = res));
+    chain = new Promise<void>(res => (release = res));
     await prev;
     try {
       return await fn();
@@ -380,7 +380,7 @@ export const getStableKey = (
 ): string => {
   if (typeof keyData === 'string') return keyData;
   if (Array.isArray(keyData))
-    return keyData.map((value) => toString(value)).join('__-__');
+    return keyData.map(value => toString(value)).join('__-__');
   return Object.entries(keyData)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => `${k}__:__${toString(v)}`)

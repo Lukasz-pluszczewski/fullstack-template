@@ -5,9 +5,13 @@ import { z } from 'zod';
 import config from '../../../config';
 import { getConfig, System, User } from '../index';
 // @ts-expect-error TS2307
-import exampleSystemTemplateRawImport from './example.system.handlebars' with { type: 'text' };
+import exampleSystemTemplateRawImport from './example.system.handlebars' with {
+  type: 'text',
+};
 // @ts-expect-error TS2307
-import exampleUserTemplateRawImport from './example.user.handlebars' with { type: 'text' };
+import exampleUserTemplateRawImport from './example.user.handlebars' with {
+  type: 'text',
+};
 
 const exampleSystemTemplate = Handlebars.compile(
   exampleSystemTemplateRawImport

@@ -49,7 +49,7 @@ export const fetchModels = async (): Promise<OpenRouterModel[]> => {
     const cached = await (async () => {
       const modelsLastUpdated = await fs
         .stat(MODELS_PATH)
-        .then((s) => s.mtimeMs)
+        .then(s => s.mtimeMs)
         .catch(() => 0);
       if (Date.now() - modelsLastUpdated < 24 * 60 * 60 * 1000) {
         return JSON.parse(await fs.readFile(MODELS_PATH, 'utf8'));
@@ -84,11 +84,9 @@ export const fetchModels = async (): Promise<OpenRouterModel[]> => {
 };
 
 export const generateModelsType = (models: OpenRouterModel[]): string =>
-  models
-    .map((model) => `'${model.id}' | '${model.canonical_slug}'`)
-    .join(' | ');
+  models.map(model => `'${model.id}' | '${model.canonical_slug}'`).join(' | ');
 export const generateModelsArray = (models: OpenRouterModel[]): string =>
-  `[${models.map((model) => `'${model.id}', '${model.canonical_slug}'`).join(', ')}]`;
+  `[${models.map(model => `'${model.id}', '${model.canonical_slug}'`).join(', ')}]`;
 export const updateOpenRouterTypes = async (): Promise<string> => {
   const models = await fetchModels();
   const modelsType = generateModelsType(models);

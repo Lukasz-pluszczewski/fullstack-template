@@ -10,8 +10,8 @@
     "start-node": "NODE_ENV=production tsx src/server/main.ts",
     "build": "bunx --bun vite build",
     "build-node": "vite build",
-    "prettier": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "format": "bunx --bun @biomejs/biome format --write ./src",
     "init": "bun init.js"
   },
   "dependencies": {
@@ -51,6 +51,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.11",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@types/bun": "^1.3.9",
     "@types/express": "^5.0.6",
@@ -65,10 +66,9 @@
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
-    "prettier": "^3.8.1",
     "replace-in-file": "^8.4.0",
     "tsx": "^4.21.0",
-    "vite": "^7.3.1",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vite": "^7.3.1"
   }
 }

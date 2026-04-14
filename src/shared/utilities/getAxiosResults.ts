@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosResponse } from 'axios';
 
-const isAxiosError = (error: any): error is AxiosError => error?.isAxiosError ?? false;
+const isAxiosError = (error: any): error is AxiosError =>
+  error?.isAxiosError ?? false;
 export const getAxiosResults = (response?: AxiosResponse) => {
   if (!response) return {};
   return {

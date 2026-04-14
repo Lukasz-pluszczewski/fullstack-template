@@ -21,7 +21,7 @@ const loadConfigFromServer = async () => {
 
     (
       Object.keys(parsedConfig.data) as (keyof z.infer<typeof configSchema>)[]
-    ).forEach((key) => {
+    ).forEach(key => {
       config[key] = parsedConfig.data[key];
     });
 
@@ -69,7 +69,7 @@ export const ConfigLoader = ({ children }: { children: React.ReactNode }) => {
       .then(() => {
         setConfigLoadingStatus(ConfigLoadingStatus.Loaded);
       })
-      .catch((error) => {
+      .catch(error => {
         setConfigLoadingStatus(ConfigLoadingStatus.Error);
         setError(error);
       });

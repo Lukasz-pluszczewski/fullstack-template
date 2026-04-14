@@ -29,14 +29,13 @@ const links: Link[] = [
   },
 ];
 
-
 const DEFAULT_PAGE_TITLE = '${ pageTitleHtml }';
 
 export function HeaderMenu() {
   const [opened, { toggle }] = useDisclosure(false);
 
-  const items = links.map((link) => {
-    const menuItems = link.links?.map((item) => (
+  const items = links.map(link => {
+    const menuItems = link.links?.map(item => (
       <Menu.Item key={item.link}>
         <NavLink to={item.link} label={item.label} className={classes.link} />
       </Menu.Item>

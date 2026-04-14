@@ -1,7 +1,5 @@
 import { Route, Routes } from 'react-router';
 
-
-
 import { Error } from '../platform/errors/Error';
 import { RouteNotFoundError } from '../platform/errors/errors';
 import Examples, {
@@ -16,10 +14,6 @@ import Examples, {
   Table,
 } from './Examples';
 import Home from './Home';
-
-
-
-
 
 export default function Router() {
   return (

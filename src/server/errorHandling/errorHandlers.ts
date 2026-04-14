@@ -26,7 +26,7 @@ const getErrorData = (
 });
 
 const errorHandlers: ErrorHandler<RouteParams, Locals>[] = [
-  (error) => (
+  error => (
     console.error(
       'Error handler',
       error,
@@ -42,7 +42,7 @@ const errorHandlers: ErrorHandler<RouteParams, Locals>[] = [
       ),
     }
   ),
-  (error) => {
+  error => {
     console.error(
       'Unexpected error (most likely thrown in error handler)',
       error
