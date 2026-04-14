@@ -1,13 +1,13 @@
 import {
-  QueryKey,
   useMutation,
-  UseMutationOptions,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
+  type QueryKey,
+  type UseMutationOptions,
+  type UseQueryOptions,
 } from '@tanstack/react-query';
-import axios, { AxiosRequestConfig } from 'axios';
-import { ZodType } from 'zod';
+import axios, { type AxiosRequestConfig } from 'axios';
+import { type ZodType } from 'zod';
 
 const defaultOptions = {
   refetchOnWindowFocus: false,

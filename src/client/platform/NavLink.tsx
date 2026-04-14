@@ -1,4 +1,4 @@
-import { NavLinkProps, NavLink as RouterNavLink } from 'react-router';
+import { NavLink as RouterNavLink, type NavLinkProps } from 'react-router';
 
 export default function NavLink(
   props: Omit<NavLinkProps, 'children'> & { label: string }

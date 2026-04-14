@@ -1,4 +1,4 @@
-import { LinkProps, Link as RouterLink } from 'react-router';
+import { Link as RouterLink, type LinkProps } from 'react-router';
 
 export default function Link(
   props: Omit<LinkProps, 'children'> & { label: React.ReactNode }

@@ -1,11 +1,11 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import {
-  AssistantModelMessage,
-  FlexibleSchema,
   Output,
-  SystemModelMessage,
-  UserModelMessage,
+  type AssistantModelMessage,
+  type FlexibleSchema,
+  type SystemModelMessage,
+  type UserModelMessage,
 } from 'ai';
 import { fetch as undiciFetch } from 'undici';
 

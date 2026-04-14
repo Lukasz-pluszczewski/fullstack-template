@@ -30,6 +30,6 @@ export class BaseError extends Error {
 }
 
 export class RouteNotFoundError extends BaseError {
-  defaultMessage = 'Route not found';
-  defaultHttpStatus = statusCodes.NOT_FOUND;
+  override defaultMessage = 'Route not found';
+  override defaultHttpStatus = statusCodes.NOT_FOUND;
 }

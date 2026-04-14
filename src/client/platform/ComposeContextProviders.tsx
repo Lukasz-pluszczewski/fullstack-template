@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode } from 'react';
+import React, { type ComponentType, type ReactNode } from 'react';
 
 type ProviderDefinition<TProps extends {}> = [ComponentType<TProps>, TProps];
 

@@ -1,4 +1,4 @@
-import { MultiplyService } from './Multiply.service';
+import { type MultiplyService } from './Multiply.service';
 
 export type ExampleService = ReturnType<typeof createExampleService>;
 export const createExampleService = ({

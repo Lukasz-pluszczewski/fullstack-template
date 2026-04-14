@@ -1,7 +1,7 @@
-import { Routes } from 'simple-express-framework';
+import { type Routes } from 'simple-express-framework';
 import z from 'zod';
 
-import { Locals, RouteParams } from '../../types';
+import { type Locals, type RouteParams } from '../../types';
 
 export const exampleRoute: Routes<RouteParams, Locals>[] = [
   [

@@ -7,7 +7,7 @@ import { createExampleService } from './modules/example/Example.service';
 import { createMultiplyService } from './modules/example/Multiply.service';
 import { updateOpenRouterTypes } from './modules/openrouter/models';
 import routes from './routes';
-import { Locals, RouteParams } from './types';
+import { type Locals, type RouteParams } from './types';
 
 ViteExpress.config({
   mode: config.NODE_ENV,

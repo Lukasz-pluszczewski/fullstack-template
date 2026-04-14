@@ -27,11 +27,10 @@ export class BaseError extends Error {
   devMessage?: string; // message included in development logs
   httpStatus?: number;
   details?: any; // arbitrary data
-  cause?: any;
 }
 
 export class InitializationError extends BaseError {
-  defaultMessage = 'Initialization error';
+  override defaultMessage = 'Initialization error';
 }
 
 export class ConfigValidationError extends InitializationError {
@@ -43,10 +42,10 @@ export class ConfigValidationError extends InitializationError {
     this.inputConfig = inputConfig;
   }
   inputConfig?: Record<string, unknown>;
-  defaultMessage = 'Config validation error';
+  override defaultMessage = 'Config validation error';
 }
 
 export class RouteNotFoundError extends BaseError {
-  defaultMessage = 'Route not found';
-  defaultHttpStatus = statusCodes.NOT_FOUND;
+  override defaultMessage = 'Route not found';
+  override defaultHttpStatus = statusCodes.NOT_FOUND;
 }
