@@ -2,11 +2,12 @@ import {
   persistCollection,
   persistKeyValue,
 } from 'fullstack-simple-persist/express';
-import { wrapMiddleware as w, type Routes } from 'simple-express-framework';
+import { type Routes, wrapMiddleware as w } from 'simple-express-framework';
 
 import { RouteNotFoundError } from './errorHandling/errors.js';
 import { exampleRoute } from './modules/example';
-import { type Locals, type RouteParams } from './types';
+
+import type { Locals, RouteParams } from './types';
 
 const routes: Routes<RouteParams, Locals>[] = [
   ['/keyvalue', w(persistKeyValue('keyvalue'))],

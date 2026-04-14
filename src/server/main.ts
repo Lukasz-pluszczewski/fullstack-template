@@ -7,14 +7,14 @@ import { createExampleService } from './modules/example/Example.service';
 import { createMultiplyService } from './modules/example/Multiply.service';
 import { updateOpenRouterTypes } from './modules/openrouter/models';
 import routes from './routes';
-import { type Locals, type RouteParams } from './types';
+import type { Locals, RouteParams } from './types';
 
 ViteExpress.config({
   mode: config.NODE_ENV,
   ignorePaths: /\/api'/,
 });
 
-(async function () {
+(async () => {
   await updateOpenRouterTypes();
   const multiplyService = createMultiplyService();
   const exampleService = createExampleService({ multiplyService });
@@ -45,10 +45,10 @@ ViteExpress.config({
       ViteExpress.bind(app, server, async () => {
         const { root, base } = await ViteExpress.getViteConfig();
         console.log(
-          `Serving frontend app from root ${root}; listening on :${port}${base}`
+          `Serving frontend app from root ${root}; listening on :${port}${base}`,
         );
       });
       console.log('Backend app listening on port', port);
     })
-    .catch((error) => console.error('Error', error));
+    .catch(error => console.error('Error', error));
 })();
