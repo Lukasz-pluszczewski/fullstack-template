@@ -4,27 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build and Development Commands
 
+Use Node 24 via nub (`.node-version`). Prefer `nub <file>`, `nub run <script>`,
+`nubx <tool>`, and `nub install` / `nub add`. Keep the existing `bun.lock` format.
+Use `nub --node <file>` for unaugmented Node.
+
 ```bash
-# Development (primary - uses Bun with hot reload)
-bun run dev
+# Development with restart on changes
+nub run dev
 
-# Development (Node.js fallback - uses nodemon + tsx)
-bun run dev-node
+# Production build and server
+nub run build
+nub run start
 
-# Production build
-bun run build
+# Format, lint, and type check
+nub run format
+nub run lint
+nub run typecheck
 
-# Production server
-bun run start
+# Initialize a new project from the template
+nub run init
 
-# Format code
-bun run prettier
-
-# Type check
-bun run typecheck
+# Tests (single run or watch mode)
+nub run test
+nub run test:watch
 ```
 
-**No testing framework is currently configured.**
+Tests use Vitest on Node with explicit imports from `vitest`. Bun is not required.
+Set `NODE_ENV` in scripts or the process environment; nub ignores assignments in
+`.env` files.
 
 ## Architecture Overview
 
@@ -87,7 +94,7 @@ export const createExampleService = ({ multiplyService }: { multiplyService: Mul
 
 ## Tech Stack
 
-- **Runtime**: Bun (primary), Node.js (fallback)
+- **Runtime**: Node 24 via nub
 - **Build**: Vite 7
 - **Frontend**: React 19, React Router 7, React Query 5, Mantine 8, Tabler Icons
 - **Backend**: Express 5, simple-express-framework, node-persist
@@ -96,6 +103,6 @@ export const createExampleService = ({ multiplyService }: { multiplyService: Mul
 
 ## Code Style
 
-- Prettier with `@ianvs/prettier-plugin-sort-imports` for automatic import ordering
+- Biome (`biome.json`) for formatting, linting, and import organization
 - TypeScript strict mode enabled
 - Single quotes, trailing commas (es5 style)

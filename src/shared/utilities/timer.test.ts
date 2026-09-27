@@ -1,5 +1,4 @@
-// time.test.ts
-import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test';
+import { afterEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { time } from './timer';
 
 // Helpers
@@ -19,19 +18,19 @@ function uniqueId(prefix = 't') {
 }
 
 describe('time.ts', () => {
-  let perfNowSpy: ReturnType<typeof spyOn> | undefined;
+  let perfNowSpy: MockInstance<typeof performance.now> | undefined;
 
   afterEach(() => {
-    perfNowSpy?.mockRestore?.();
+    perfNowSpy?.mockRestore();
     perfNowSpy = undefined;
   });
 
   describe('start()', () => {
     it('logs a start line and stores a timer instance with readonly id', () => {
       const id = uniqueId('start');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(seq([1000]));
+      perfNowSpy = vi.spyOn(performance, 'now').mockImplementation(seq([1000]));
 
       const timer = time.start(id, logger);
 
@@ -54,9 +53,9 @@ describe('time.ts', () => {
 
     it('time(id, logger) behaves like start(id, logger)', () => {
       const id = uniqueId('call-signature');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(seq([123]));
+      perfNowSpy = vi.spyOn(performance, 'now').mockImplementation(seq([123]));
 
       const timer = (time as any)(id, logger);
 
@@ -69,14 +68,14 @@ describe('time.ts', () => {
   describe('split()', () => {
     it('logs split with label + meta, formats ms < 100 with 1 decimal, and logs meta on the next line', () => {
       const id = uniqueId('split-label-meta');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
       // startImpl: now()
       // splitImpl: ensureTimer() uses existing state (no now)
       // then splitImpl: now()
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([1000, 1034.56])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([1000, 1034.56]));
 
       const t = time.start(id, logger);
       t('phase 1', { ok: true });
@@ -103,13 +102,13 @@ describe('time.ts', () => {
 
     it('supports split(id, meta) (no label) and logs meta', () => {
       const id = uniqueId('split-meta-only');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
       // ensureTimer() implicit start: now()
       // then splitImpl: now()
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([2000, 2100])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([2000, 2100]));
 
       const meta = { a: 1 };
       const out = time.split(id, meta);
@@ -130,14 +129,16 @@ describe('time.ts', () => {
 
     it('implicit start happens if split() is called before start()', () => {
       const id = uniqueId('implicit-start-split');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
       // We can't inject logger through time.split(), but we can via time.start() after-the-fact
       // So here we assert behavior via return values and timing math.
       // Calls:
       // ensureTimer: now() -> 10
       // splitImpl: now() -> 25
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(seq([10, 25]));
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([10, 25]));
 
       const out = time.split(id, 'first');
 
@@ -152,14 +153,14 @@ describe('time.ts', () => {
 
     it('updates lap time across consecutive splits (lastMs moves forward)', () => {
       const id = uniqueId('split-laps');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
       // start: 1000
       // split1: 2500 => total 1500ms => 1.50s, lap 1500ms => 1.50s
       // split2: 3700 => total 2700ms => 2.70s, lap 1200ms => 1.20s
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([1000, 2500, 3700])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([1000, 2500, 3700]));
 
       const t = time.start(id, logger);
       t('lap1');
@@ -178,14 +179,14 @@ describe('time.ts', () => {
     it('formats minutes and hours', () => {
       const idM = uniqueId('minutes');
       const idH = uniqueId('hours');
-      const loggerM = mock<typeof console.log>(() => {});
-      const loggerH = mock<typeof console.log>(() => {});
+      const loggerM = vi.fn<typeof console.log>(() => {});
+      const loggerH = vi.fn<typeof console.log>(() => {});
 
       // Minutes case:
       // start 0, split at 2m 03.21s => 123.21s => 123210ms
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([0, 123_210])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([0, 123_210]));
       const tm = time.start(idM, loggerM);
       tm('min');
       expect(loggerM.mock.calls[1]![0] as string).toContain(
@@ -196,9 +197,9 @@ describe('time.ts', () => {
 
       // Hours case:
       // start 0, split at 1h 5m => 3900s => 3_900_000ms
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([0, 3_900_000])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([0, 3_900_000]));
       const th = time.start(idH, loggerH);
       th('hr');
       expect(loggerH.mock.calls[1]![0] as string).toContain('[1h 5m | +1h 5m]');
@@ -208,16 +209,16 @@ describe('time.ts', () => {
   describe('end()', () => {
     it('logs end with last lap, logs meta if provided, and deletes timer state (next split becomes a fresh implicit start)', () => {
       const id = uniqueId('end-deletes');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
       // start 100
       // split 250 => total 150ms lap 150ms
       // end 400 => total 300ms last lap 150ms (from lastMs=250)
       // split after end triggers implicit start:
       // ensureTimer: 1000, then split: 1100 => total 100ms lap 100ms
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([100, 250, 400, 1000, 1100])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([100, 250, 400, 1000, 1100]));
 
       const t = time.start(id, logger);
       t('mid');
@@ -253,9 +254,9 @@ describe('time.ts', () => {
       // ensureTimer: 0, end: 50 => total 50 lap 50
       // end(label+meta):
       // ensureTimer: 100, end: 250 => total 150 lap 150
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([0, 50, 100, 250])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([0, 50, 100, 250]));
 
       const out1 = time.end(id1, { x: 1 });
       expect(out1.id).toBe(id1);
@@ -278,9 +279,11 @@ describe('time.ts', () => {
   describe('instance call signature', () => {
     it('timer(meta) behaves like split with meta (no label)', () => {
       const id = uniqueId('instance-meta');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(seq([10, 35]));
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([10, 35]));
 
       const t = time.start(id, logger);
       t({ hello: 'world' });
@@ -297,11 +300,11 @@ describe('time.ts', () => {
 
     it('timer() records a split with no label/meta', () => {
       const id = uniqueId('instance-noargs');
-      const logger = mock<typeof console.log>(() => {});
+      const logger = vi.fn<typeof console.log>(() => {});
 
-      perfNowSpy = spyOn(performance, 'now').mockImplementation(
-        seq([1000, 1123])
-      );
+      perfNowSpy = vi
+        .spyOn(performance, 'now')
+        .mockImplementation(seq([1000, 1123]));
 
       const t = time.start(id, logger);
       t();

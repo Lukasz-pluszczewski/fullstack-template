@@ -7,7 +7,6 @@ import {
   type SystemModelMessage,
   type UserModelMessage,
 } from 'ai';
-import { fetch as undiciFetch } from 'undici';
 
 import type { OpenRouterModel } from '../openrouter/availableModels';
 
@@ -21,11 +20,9 @@ const openrouter = createOpenAICompatible<
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: 'https://openrouter.ai/api/v1',
   includeUsage: true, // Include usage information in streaming responses
-  fetch: undiciFetch as unknown as typeof fetch, // Workaround for Bun's buggy globalThis.fetch
 });
 const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  fetch: undiciFetch as unknown as typeof fetch, // Workaround for Bun's buggy globalThis.fetch
 });
 
 export const providers = {

@@ -86,7 +86,12 @@ const questions = [
     await fs.cp('./.env.example', './.env');
   }
   const results = replaceInFileSync({
-    files: ['package.json', 'index.html', 'src/Layout.tsx'],
+    files: [
+      'package.json',
+      'index.html',
+      'src/client/platform/layout/HeaderMenu.tsx',
+      'docker-compose.prod.yaml',
+    ],
     processor: input => _.template(input)(answers),
   });
 

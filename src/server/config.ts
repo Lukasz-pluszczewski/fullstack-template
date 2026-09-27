@@ -45,10 +45,10 @@ const config = {
 } as const;
 
 // List of config keys containing secrets
-const SECRETS = ['OPENAI_API_KEY'];
+const SECRETS = ['OPENAI_API_KEY', 'OPENROUTER_API_KEY'];
 
 // List of config keys that definitely not contain secrets
-const IGNORELIST = ['OPEN_AI_URL'];
+const IGNORELIST = ['OPEN_AI_URL', 'OPENROUTER_URL'];
 
 const parsedConfig = configSchema.safeParse(config);
 

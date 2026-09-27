@@ -42,7 +42,10 @@ export interface TopProvider {
 }
 
 const MODELS_PATH = path.resolve('data/openRouterModelsCache.json');
-const MODELS_TYPE_PATH = path.resolve(__dirname, 'availableModels.ts');
+const MODELS_TYPE_PATH = path.resolve(
+  import.meta.dirname,
+  'availableModels.ts'
+);
 
 export const fetchModels = async (): Promise<OpenRouterModel[]> => {
   try {

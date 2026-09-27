@@ -4,15 +4,15 @@
   "version": "${ version }",
   "type": "module",
   "scripts": {
-    "dev": "bun --env-file .env --watch src/server/main.ts",
-    "dev-node": "nodemon -w src/server -x tsx watch --env-file ./.env src/server/main.ts",
-    "start": "NODE_ENV=production bun src/server/main.ts",
-    "start-node": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "bunx --bun vite build",
-    "build-node": "vite build",
+    "dev": "NODE_ENV=development nub --env-file=.env --watch src/server/main.ts",
+    "start": "NODE_ENV=production nub src/server/main.ts",
+    "build": "NODE_ENV=production vite build",
     "typecheck": "tsc --noEmit",
-    "format": "bunx --bun @biomejs/biome format --write ./src",
-    "init": "bun init.js"
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "format": "biome format --write ./src",
+    "lint": "biome lint ./src",
+    "init": "nub init.js"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.29",
@@ -41,19 +41,17 @@
     "node-persist": "^4.0.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router": "^7.13.0",
     "react-object-view": "^0.3.5",
+    "react-router": "^7.13.0",
     "recharts": "^3.2.1",
     "simple-express-framework": "^3.2.0",
     "swich": "^1.2.0",
-    "undici": "^7.22.0",
     "vite-express": "^0.22.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.11",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "@types/bun": "^1.3.9",
     "@types/express": "^5.0.6",
     "@types/lodash": "^4.17.23",
     "@types/node": "^24.10.13",
@@ -62,13 +60,12 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
     "inquirer": "^13.2.1",
-    "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "replace-in-file": "^8.4.0",
-    "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^5.0.2"
   }
 }

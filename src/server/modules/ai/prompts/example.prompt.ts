@@ -1,22 +1,17 @@
+import { readFileSync } from 'node:fs';
 import Handlebars from 'handlebars';
 import JSON5 from 'json5';
 import { z } from 'zod';
 
 import config from '../../../config';
 import { getConfig, System, User } from '../index';
-// @ts-expect-error TS2307
-import exampleSystemTemplateRawImport from './example.system.handlebars' with {
-  type: 'text',
-};
-// @ts-expect-error TS2307
-import exampleUserTemplateRawImport from './example.user.handlebars' with {
-  type: 'text',
-};
 
 const exampleSystemTemplate = Handlebars.compile(
-  exampleSystemTemplateRawImport
+  readFileSync(new URL('./example.system.handlebars', import.meta.url), 'utf8')
 );
-const exampleUserTemplate = Handlebars.compile(exampleUserTemplateRawImport);
+const exampleUserTemplate = Handlebars.compile(
+  readFileSync(new URL('./example.user.handlebars', import.meta.url), 'utf8')
+);
 
 export const exampleProviderSchema = z
   .enum(['openrouter', 'openai'])

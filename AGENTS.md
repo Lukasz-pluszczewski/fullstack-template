@@ -43,16 +43,19 @@ export const createExampleService = ({
 ```
 
 ## Build, Test, and Development Commands
-- `bun run dev`: Start full app in development (Bun + hot reload).
-- `bun run dev-node`: Node.js fallback dev server (`nodemon` + `tsx`).
-- `bun run build`: Build client assets with Vite into `dist/`.
-- `bun run build-node`: Build client assets with Node-based Vite.
-- `bun run start`: Run server in production mode.
-- `bun run start-node`: Run production server with Node/tsx.
-- `bun run typecheck`: Run strict TypeScript checks (no emit).
-- `bun run prettier`: Format the repository.
-- `bun run init`: Replace scaffold placeholders (for example `${ packageName }`).
-- `bun test` or `bun test src/shared/utilities/timer.test.ts`: Run unit tests.
+- Use Node 24 via nub; `.node-version` pins the major version.
+- Prefer `nub <file>` for files, `nub run <script>` for scripts, `nubx <tool>` for local CLIs, and `nub install` / `nub add` for dependencies. Use `nub --node <file>` for unaugmented Node.
+- Keep `bun.lock`; nub reads and updates this lockfile format.
+- `nub run dev`: Start the full app on Node with restart on changes and `.env` loading.
+- `nub run build`: Build production client assets with Vite into `dist/`.
+- `nub run start`: Run the server in production mode.
+- `nub run typecheck`: Run strict TypeScript checks (no emit).
+- `nub run format`: Format source files with Biome.
+- `nub run lint`: Lint source files with Biome.
+- `nub run init`: Replace scaffold placeholders (for example `${ packageName }`).
+- `nub run test`: Run the Vitest suite once on Node. Pass a file path to run one test file.
+- `nub run test:watch`: Run Vitest in watch mode.
+- Set `NODE_ENV` in scripts or the process environment, not `.env` files.
 
 ## Architecture guidelines
 - Avoid unnecessary abstractions: keep modules simple, focused, and single responsibility, each abstraction must have a good reason to exist. Prefer verbosity over multiplying abstractions.
@@ -71,8 +74,8 @@ export const createExampleService = ({
 
 ## Coding Style & Naming Conventions
 - Use TypeScript with strict typing; avoid `any` unless unavoidable.
-- Formatting is enforced by Prettier (`.prettierrc.mjs`): single quotes, trailing commas (es5), sorted imports.
-- Use 2-space indentation (Prettier default).
+- Formatting is configured in `biome.json`: single quotes, trailing commas (es5), and import organization.
+- Use 2-space indentation.
 - React components and route files use `PascalCase` (for example, `HeaderMenu.tsx`).
 - Utilities and helpers use `camelCase` filenames (for example, `fileCache.ts`).
 - Backend service files follow `Feature.service.ts` naming (for example, `Example.service.ts`, `Multiply.service.ts`).
@@ -93,7 +96,8 @@ export const createExampleService = ({
   - `countBy` - GOOD. Can be used to for results summarization and in many different places. Should be put in general `utils` module/folder/file.
 
 ## Testing Guidelines
-- Primary framework: Bun test runner (`bun:test`).
+- Primary framework: Vitest on Node. Import test functions and `vi` from `vitest`.
+- Use `vi.fn` for mocks and `vi.spyOn` for spies; restore spies after each test.
 - Test files use `*.test.ts` naming (example: `src/shared/utilities/timer.test.ts`).
 - Add or update tests for behavioral changes in shared utilities and server modules.
 - Prefer unit tests for service logic and shared utilities; run tests and type-check before opening a PR.
@@ -109,4 +113,4 @@ export const createExampleService = ({
 
 ## Security & Configuration Tips
 - Copy `.env.example` to `.env` for local setup; never commit secrets.
-- If scaffold placeholders (for example `${ packageName }`) are still present, run `bun run init` once to replace app and Docker naming values.
+- If scaffold placeholders (for example `${ packageName }`) are still present, run `nub run init` once to replace app and Docker naming values.

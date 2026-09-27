@@ -1,0 +1,11 @@
+node_modules
+dist
+.vitest
+.git
+.env
+.env.*
+!.env.example
+data
+*.log
+**/*.test.ts
+**/*.test-util.ts
