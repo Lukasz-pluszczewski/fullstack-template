@@ -4,7 +4,8 @@
 
 - Prefer simple, readable, cohesive code with few abstractions and little indirection. Keep modules focused, but do not split code merely to shorten functions or files.
 - Keep domain rules, execution order, and data transformations visible. Prefer straightforward code and some repetition over helper or strategy layers that make the reader jump between files.
-- Give every abstraction a concrete reason to exist. Avoid single-use, case-specific helpers. When extracting shared logic, identify the smallest meaningful operation that stands on its own across different uses. Keep domain decisions and orchestration in the caller. Generalize by narrowing responsibility, not by adding options or speculative features.
+- Give every abstraction a concrete reason to exist. Avoid case-specific helpers unless they isolate a meaningful algorithm stage or separate concern, even with one caller. Forwarding methods and trivial transformations usually do not justify extraction.
+- When extracting shared logic, identify the smallest meaningful operation that stands on its own across different uses. Keep domain decisions and orchestration in the caller. Generalize shared helpers and utilities by narrowing responsibility, not by adding options or speculative features.
 - Reusable utilities belong in separate files and must have no side effects.
 - Use precise domain names that reflect meaning, ownership, and lifecycle.
 - Understand the existing design before changing it. Follow patterns explicitly requested by the user and preserve unrelated work.
