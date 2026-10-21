@@ -1,8 +1,7 @@
 import { map } from 'async-collection-utils';
 import { z } from 'zod';
-
-import { ConfigValidationError } from './errorHandling/errors';
 import { detectSecret, formatSecret } from '../shared/utilities/secrets';
+import { ConfigValidationError } from './errorHandling/errors';
 import {
   exampleModelSchema,
   exampleProviderSchema,
@@ -62,17 +61,15 @@ if (!parsedConfig.success) {
 
 console.log(
   'Config loaded successfully',
-  config.NODE_ENV === 'development'
-    ? parsedConfig.data
-    : map(parsedConfig.data, (value, key) => {
-        if (SECRETS.includes(key)) return formatSecret(value);
-        if (detectSecret(key, value, { ignorelist: IGNORELIST })) {
-          throw new Error(
-            `"${key}" seems to be a secret. Add it to ignorelist or to "SECRETS" array in config.ts`
-          );
-        }
-        return value;
-      })
+  map(parsedConfig.data, (value, key) => {
+    if (SECRETS.includes(key)) return formatSecret(value);
+    if (detectSecret(key, value, { ignorelist: IGNORELIST })) {
+      throw new Error(
+        `"${key}" seems to be a secret. Add it to ignorelist or to "SECRETS" array in config.ts`
+      );
+    }
+    return value;
+  })
 );
 
 export type Config = z.infer<typeof configSchema>;

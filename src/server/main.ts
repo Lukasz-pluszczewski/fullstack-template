@@ -1,4 +1,5 @@
 import { simpleExpress } from 'simple-express-framework';
+import type { InlineConfig } from 'vite';
 import ViteExpress from 'vite-express';
 
 import config from './config';
@@ -9,9 +10,20 @@ import { updateOpenRouterTypes } from './modules/openrouter/models';
 import routes from './routes';
 import type { Locals, RouteParams } from './types';
 
+// vite-express uses this instead of resolving vite.config.ts, which Vite still
+// loads. The default 'bundle' loader imports vite.config.ts from a new temp file
+// on every start and deletes it, which makes `--watch` restart in a loop
+const viteConfig = {
+  root: process.cwd(),
+  base: '/',
+  build: { outDir: 'dist' },
+  configLoader: 'runner',
+} satisfies InlineConfig;
+
 ViteExpress.config({
   mode: config.NODE_ENV,
-  ignorePaths: /\/api'/,
+  ignorePaths: /^\/api(\/|$)/,
+  inlineViteConfig: viteConfig,
 });
 
 (async () => {
